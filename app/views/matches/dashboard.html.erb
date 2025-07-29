@@ -1,0 +1,25 @@
+<h1>Your Dashboard</h1>
+
+<h2>Connections</h2>
+<% if @connections.any? %>
+  <ul>
+    <% @connections.each do |m| %>
+      <li><%= m.target.name %> (<%= m.target.role %>)</li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No connections yet.</p>
+<% end %>
+
+<h2>Passes</h2>
+<% if @passes.any? %>
+  <ul>
+    <% @passes.each do |m| %>
+      <li><%= m.target.name %> (<%= m.target.role %>)</li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No passes yet.</p>
+<% end %>
+
+<%= link_to 'Discover More', next_match_path, class: 'mt-4 inline-block' %>

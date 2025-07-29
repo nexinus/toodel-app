@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'matches/index'
+  get 'match', to: 'matches#index'
+  post 'match/:id/:action_type', to: 'matches#action', as: :match_action
   devise_for :users, controllers: { registrations: 'users/registrations' }
   get "welcome/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -13,6 +16,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root to: 'welcome#index'
+  get  '/matches/next',            to: 'matches#index', as: :next_match
+  post '/matches/:id/:type',       to: 'matches#swipe', as: :swipe_match
+  get '/dashboard', to: 'matches#dashboard', as: :dashboard
 
+  
   resources :users
 end

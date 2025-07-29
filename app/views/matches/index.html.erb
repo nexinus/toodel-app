@@ -1,0 +1,19 @@
+<h1>Discover People</h1>
+
+<% if @candidate %>
+  <div class="profile-card p-4 mb-4 border rounded-lg shadow-sm max-w-md">
+    <p><strong>Name:</strong> <%= @candidate.name %></p>
+    <p><strong>Role:</strong> <%= @candidate.role %></p>
+    <p><strong>Skills:</strong> <%= @candidate.skills %></p>
+    <p><strong>Bio:</strong> <%= simple_format(@candidate.bio) %></p>
+  </div>
+
+  <div class="buttons flex space-x-4">
+    <%= button_to 'Pass',    swipe_match_path(@candidate.id, type: 'pass'),    method: :post %>
+<%= button_to 'Connect', swipe_match_path(@candidate.id, type: 'connect'), method: :post %>
+  </div>
+<% else %>
+  <p>No more users to show right now. Check back later!</p>
+<% end %>
+
+<%= link_to 'Back to Dashboard', root_path %>
