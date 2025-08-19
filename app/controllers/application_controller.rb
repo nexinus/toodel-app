@@ -8,6 +8,20 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     added_attrs = [:name, :role, :skills, :bio]
     devise_parameter_sanitizer.permit(:sign_up, keys: added_attrs)
+    devise_parameter_sanitizer.permit(:sign_up, keys: [
+      :university, 
+      :degree_program,
+      :year_of_study,
+      :preferred_project_types,
+      :availability
+    ])
     devise_parameter_sanitizer.permit(:account_update, keys: added_attrs)
+    devise_parameter_sanitizer.permit(:account_update, keys: [
+      :university, 
+      :degree_program, 
+      :year_of_study, 
+      :preferred_project_types, 
+      :availability
+    ])
   end
 end

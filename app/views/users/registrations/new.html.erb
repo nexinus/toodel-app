@@ -1,49 +1,30 @@
-<h2>Sign up</h2>
+<h1>TESTING FILE</h1>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "users/shared/error_messages", resource: resource %>
+<div class="min-h-screen flex items-center justify-center bg-black text-white">
+  <div class="w-full max-w-md bg-gray-900 p-8 rounded-2xl shadow-lg">
+    <h2 class="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+      Create your account
+    </h2>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <div class="space-y-4">
+        <%= f.email_field :email, autofocus: true, placeholder: "Email", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-pink-500" %>
+        <%= f.password_field :password, autocomplete: "new-password", placeholder: "Password", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-purple-500" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm Password", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-cyan-500" %>
 
-  <div class="field">
-    <%= f.label :role %><br />
-    <%= f.text_field :role %>
-  </div>
+        <%= f.text_field :university, placeholder: "University", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-pink-500" %>
+        <%= f.text_field :degree_program, placeholder: "Degree Program", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-purple-500" %>
+        <%= f.number_field :year_of_study, placeholder: "Year of Study", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-cyan-500" %>
+        
+        <%= f.text_field :preferred_project_types, placeholder: "Preferred Project Types", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-pink-500" %>
+        <%= f.text_field :availability, placeholder: "Availability", class: "w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-purple-500" %>
+      </div>
 
-  <div class="field">
-    <%= f.label :skills %><br />
-    <%= f.text_area :skills %>
+      <div class="mt-6">
+        <%= f.submit "Sign up", class: "w-full py-3 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-black font-bold hover:opacity-90 transition" %>
+      </div>
+    <% end %>
   </div>
-  
-  <div class="field">
-    <%= f.label :bio %><br />
-    <%= f.text_area :bio %>
-  </div>
-  
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+</div>
 
 <%= render "users/shared/links" %>

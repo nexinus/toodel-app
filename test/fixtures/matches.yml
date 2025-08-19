@@ -2,10 +2,12 @@
 
 one:
   user: one
-  target: one
-  kind: MyString
+  target: two
+  action_type: invite
+  status: pending
 
 two:
   user: two
-  target: two
-  kind: MyString
+  target: one
+  action_type: invite
+  status: pending

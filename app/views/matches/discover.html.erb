@@ -1,0 +1,288 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+  <div class="container mx-auto p-6">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+        Find Your Dream Team
+      </h1>
+      <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+        Connect with fellow students who share your passion for innovation and collaboration
+      </p>
+    </div>
+
+    <!-- User Profile Summary -->
+    <% if current_user %>
+      <div class="mb-8 p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <span class="text-2xl font-bold text-white"><%= current_user.display_name.first.upcase %></span>
+            </div>
+            <div>
+              <h2 class="text-xl font-semibold text-white"><%= current_user.display_name %></h2>
+              <p class="text-gray-300">
+                <%= current_user.degree_program %> • Year <%= current_user.year_of_study %> • <%= current_user.university %>
+              </p>
+            </div>
+          </div>
+          
+          <div class="flex space-x-3">
+            <%= link_to 'My Teams', teams_path, 
+                class: 'px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium' %>
+            <%= link_to 'Dashboard', dashboard_path, 
+                class: 'px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl hover:from-purple-600 hover:to-pink-700 transition-all duration-200 font-medium' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Filters -->
+    <div class="mb-8 p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20">
+      <h3 class="text-lg font-semibold mb-4 text-white">Refine Your Search</h3>
+      <form method="get" action="<%= discover_path %>" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">University</label>
+          <select name="university" class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <option value="">All Universities</option>
+            <% User.distinct.pluck(:university).compact.each do |uni| %>
+              <option value="<%= uni %>" <%= 'selected' if params[:university] == uni %>><%= uni %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Project Type</label>
+          <select name="project_type" class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <option value="">All Types</option>
+            <% %w[academic startup research hackathon competition other].each do |type| %>
+              <option value="<%= type %>" <%= 'selected' if params[:project_type] == type %>><%= type.titleize %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Skills</label>
+          <input
+            type="text"
+            name="skills"
+            placeholder="e.g., React, Python, Design"
+            value="<%= params[:skills] %>"
+            class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
+        <div class="flex items-end">
+          <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium">
+            Apply Filters
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Current Candidate Card -->
+    <% if @current_candidate %>
+      <div class="max-w-2xl mx-auto mb-12">
+        <div class="relative">
+          <!-- Main Card -->
+          <div class="p-8 bg-white/10 backdrop-blur-lg rounded-3xl border border-white/20 shadow-2xl transform transition-all duration-300 hover:scale-105">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-3xl font-bold text-white mb-2"><%= @current_candidate.display_name %></h2>
+                <p class="text-xl text-gray-300">
+                  <%= @current_candidate.degree_program %> • Year <%= @current_candidate.year_of_study %>
+                </p>
+                <p class="text-lg text-purple-300"><%= @current_candidate.university %></p>
+              </div>
+              
+              <!-- Compatibility Score -->
+              <div class="text-right">
+                <div class="text-4xl font-bold text-green-400">
+                  <%= current_user.compatibility_score_with(@current_candidate) %>
+                </div>
+                <div class="text-sm text-gray-400">Match Score</div>
+              </div>
+            </div>
+
+            <!-- Skills -->
+            <% if @current_candidate.skills.present? %>
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-white mb-3">Skills</h3>
+                <div class="flex flex-wrap gap-2">
+                  <% @current_candidate.skill_tags.each do |skill| %>
+                    <span class="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-blue-300 rounded-full text-sm">
+                      <%= skill %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Project Preferences -->
+            <% if @current_candidate.preferred_project_types.present? %>
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-white mb-3">Interested In</h3>
+                <div class="flex flex-wrap gap-2">
+                  <% @current_candidate.project_type_tags.each do |type| %>
+                    <span class="px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 text-green-300 rounded-full text-sm">
+                      <%= type.titleize %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Availability -->
+            <% if @current_candidate.availability.present? %>
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">Availability</h3>
+                <p class="text-gray-300"><%= @current_candidate.availability %></p>
+              </div>
+            <% end %>
+
+            <!-- Bio -->
+            <% if @current_candidate.bio.present? %>
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">About</h3>
+                <p class="text-gray-300 leading-relaxed"><%= @current_candidate.bio %></p>
+              </div>
+            <% end %>
+
+            <!-- Action buttons -->
+            <div class="flex space-x-4 mt-6">
+              <%= button_to 'Skip', skip_match_path(@current_candidate),
+                  method: :post,
+                  class: 'px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-medium text-lg transition-colors',
+                  data: { turbo: false } %>
+              
+              <%= button_to 'Invite to Team', invite_match_path(@current_candidate),
+                  method: :post,
+                  class: 'px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 font-medium text-lg transition-all transform hover:scale-105',
+                  data: { turbo: false } %>
+            </div>
+          </div>
+
+          <!-- Navigation Arrows -->
+          <div class="absolute inset-y-0 left-0 flex items-center">
+            <button class="p-3 bg-white/20 backdrop-blur-lg rounded-full border border-white/30 text-white hover:bg-white/30 transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="absolute inset-y-0 right-0 flex items-center">
+            <button class="p-3 bg-white/20 backdrop-blur-lg rounded-full border border-white/30 text-white hover:bg-white/30 transition-all duration-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- No More Candidates -->
+      <div class="text-center py-16">
+        <div class="text-8xl mb-6">🎓</div>
+        <h3 class="text-2xl font-semibold text-white mb-4">No More Candidates Right Now</h3>
+        <p class="text-gray-300 mb-8 max-w-md mx-auto">
+          Try adjusting your filters or check back later for new potential teammates!
+        </p>
+        <div class="flex justify-center space-x-4">
+          <%= link_to 'My Teams', teams_path, 
+              class: 'px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium' %>
+          <%= link_to 'Create Team', new_team_path, 
+              class: 'px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium' %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- More Candidates Grid -->
+    <% if @candidates.any? %>
+      <div class="mt-16">
+        <h3 class="text-2xl font-semibold text-white mb-6 text-center">More Potential Teammates</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @candidates[1..6].each do |candidate| %>
+            <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 hover:border-white/40 transition-all duration-200 hover:scale-105">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="text-lg font-semibold text-white"><%= candidate.display_name %></h4>
+                <div class="text-right">
+                  <div class="text-lg font-bold text-green-400">
+                    <%= current_user.compatibility_score_with(candidate) %>
+                  </div>
+                  <div class="text-xs text-gray-400">Score</div>
+                </div>
+              </div>
+              
+              <p class="text-gray-300 text-sm mb-3">
+                <%= candidate.degree_program %> • Year <%= candidate.year_of_study %>
+              </p>
+              
+              <% if candidate.skills.present? %>
+                <div class="mb-4">
+                  <div class="flex flex-wrap gap-1">
+                    <% candidate.skill_tags.first(3).each do |skill| %>
+                      <span class="px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded text-xs">
+                        <%= skill %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+              
+              <div class="flex space-x-2">
+                <%= button_to 'Skip', skip_match_path(candidate),
+                      method: :post,
+                      class: 'flex-1 px-3 py-2 bg-red-500/20 border border-red-400/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-200 text-sm' %>
+                <%= button_to 'Invite', invite_match_path(candidate),
+                      method: :post,
+                      class: 'flex-1 px-3 py-2 bg-green-500/20 border border-green-400/30 text-green-300 rounded-lg hover:bg-green-500/30 transition-all duration-200 text-sm' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- ActionCable subscription for real-time notifications -->
+<script>
+  import consumer from "../channels/consumer"
+
+  consumer.subscriptions.create({ channel: "MutualInvitationsChannel" }, {
+    connected() {
+      console.log("Connected to MutualInvitationsChannel")
+    },
+
+    disconnected() {
+      console.log("Disconnected from MutualInvitationsChannel")
+    },
+
+    received(data) {
+      // Show notification
+      if (data.message) {
+        // Create a toast notification
+        const toast = document.createElement('div')
+        toast.className = 'fixed top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-sm'
+        toast.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <div class="text-2xl">🎉</div>
+            <div>
+              <div class="font-semibold">New Match!</div>
+              <div class="text-sm opacity-90">${data.message}</div>
+            </div>
+          </div>
+        `
+        document.body.appendChild(toast)
+        
+        // Remove after 6 seconds
+        setTimeout(() => {
+          if (document.body.contains(toast)) {
+            document.body.removeChild(toast)
+          }
+        }, 6000)
+      }
+    }
+  })
+</script>

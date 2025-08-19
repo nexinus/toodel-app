@@ -1,25 +1,293 @@
-<h1>Your Dashboard</h1>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+  <div class="container mx-auto p-6">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+        Your Project Hub
+      </h1>
+      <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+        Manage your teams, invitations, and collaborations in one place
+      </p>
+    </div>
 
-<h2>Connections</h2>
-<% if @connections.any? %>
-  <ul>
-    <% @connections.each do |m| %>
-      <li><%= m.target.name %> (<%= m.target.role %>)</li>
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+      <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 text-center">
+        <div class="text-3xl font-bold text-blue-400 mb-2"><%= @total_invitations %></div>
+        <div class="text-gray-300">Total Invitations</div>
+      </div>
+      
+      <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 text-center">
+        <div class="text-3xl font-bold text-green-400 mb-2"><%= @accepted_count %></div>
+        <div class="text-gray-300">Accepted</div>
+      </div>
+      
+      <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 text-center">
+        <div class="text-3xl font-bold text-purple-400 mb-2"><%= @team_count %></div>
+        <div class="text-gray-300">Active Teams</div>
+      </div>
+      
+      <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 text-center">
+        <div class="text-3xl font-bold text-pink-400 mb-2"><%= @compatibility_score %></div>
+        <div class="text-gray-300">Avg. Compatibility</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-center space-x-4 mb-12">
+      <%= link_to 'Discover Teammates', discover_path, 
+          class: 'px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium text-lg' %>
+      <%= link_to 'Create Team', new_team_path, 
+          class: 'px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium text-lg' %>
+      <%= link_to 'My Teams', teams_path, 
+          class: 'px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl hover:from-purple-600 hover:to-pink-700 transition-all duration-200 font-medium text-lg' %>
+    </div>
+
+    <!-- Pending Invitations -->
+    <% if @pending_invitations.any? %>
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <span class="text-yellow-400 mr-3">⏳</span>
+          Pending Invitations (<%= @pending_invitations.count %>)
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @pending_invitations.each do |invitation| %>
+            <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-yellow-400/30 hover:border-yellow-400/50 transition-all duration-200">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
+                    <span class="text-lg font-bold text-white"><%= invitation.user.display_name.first.upcase %></span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-white"><%= invitation.user.display_name %></h3>
+                    <p class="text-sm text-gray-300"><%= invitation.user.university %></p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 bg-yellow-500/20 border border-yellow-400/30 text-yellow-300 rounded-full text-xs font-medium">
+                  Pending
+                </span>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 text-sm mb-2"><strong>Skills:</strong></p>
+                <div class="flex flex-wrap gap-1">
+                  <% invitation.user.skill_tags.first(3).each do |skill| %>
+                    <span class="px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded text-xs">
+                      <%= skill %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              
+              <% if invitation.invitation_message.present? %>
+                <div class="mb-4 p-3 bg-white/5 rounded-lg">
+                  <p class="text-sm text-gray-300 italic">"<%= invitation.invitation_message %>"</p>
+                </div>
+              <% end %>
+              
+              <div class="flex space-x-2">
+                <%= button_to 'Accept', accept_match_path(invitation), 
+                      method: :post,
+                      class: 'flex-1 px-4 py-2 bg-green-500/20 border border-green-400/30 text-green-300 rounded-lg hover:bg-green-500/30 transition-all duration-200 text-sm' %>
+                <%= button_to 'Decline', decline_match_path(invitation), 
+                      method: :post,
+                      class: 'flex-1 px-4 py-2 bg-red-500/20 border border-red-400/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all duration-200 text-sm' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>No connections yet.</p>
-<% end %>
 
-<h2>Passes</h2>
-<% if @passes.any? %>
-  <ul>
-    <% @passes.each do |m| %>
-      <li><%= m.target.name %> (<%= m.target.role %>)</li>
+    <!-- My Teams -->
+    <% if @my_teams.any? %>
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <span class="text-green-400 mr-3">👥</span>
+          My Teams (<%= @my_teams.count %>)
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @my_teams.each do |team| %>
+            <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-green-400/30 hover:border-green-400/50 transition-all duration-200">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-white"><%= team.name %></h3>
+                <span class="px-3 py-1 bg-green-500/20 border border-green-400/30 text-green-300 rounded-full text-xs font-medium">
+                  <%= team.status.titleize %>
+                </span>
+              </div>
+              
+              <p class="text-gray-300 text-sm mb-4"><%= team.description %></p>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 text-sm mb-2"><strong>Project Type:</strong> <%= team.project_type.titleize %></p>
+                <p class="text-gray-300 text-sm mb-2"><strong>Members:</strong> <%= team.members.count %>/<%= team.max_members %></p>
+                <p class="text-gray-300 text-sm"><strong>University:</strong> <%= team.university %></p>
+              </div>
+              
+              <div class="flex space-x-2">
+                <%= link_to 'View Team', team_path(team), 
+                    class: 'flex-1 px-4 py-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all duration-200 text-sm text-center' %>
+                <%= link_to 'Team Chat', team_chat_path(team), 
+                    class: 'flex-1 px-4 py-2 bg-green-500/20 border border-green-400/30 text-green-300 rounded-lg hover:bg-green-500/30 transition-all duration-200 text-sm text-center' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>No passes yet.</p>
-<% end %>
 
-<%= link_to 'Discover More', next_match_path, class: 'mt-4 inline-block' %>
+    <!-- Accepted Invitations -->
+    <% if @accepted_invitations.any? %>
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <span class="text-blue-400 mr-3">✅</span>
+          Accepted Invitations (<%= @accepted_invitations.count %>)
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @accepted_invitations.each do |invitation| %>
+            <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-blue-400/30 hover:border-blue-400/50 transition-all duration-200">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <span class="text-lg font-bold text-white"><%= invitation.user.display_name.first.upcase %></span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-white"><%= invitation.user.display_name %></h3>
+                    <p class="text-sm text-gray-300"><%= invitation.user.university %></p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-full text-xs font-medium">
+                  Accepted
+                </span>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 text-sm mb-2"><strong>Skills:</strong></p>
+                <div class="flex flex-wrap gap-1">
+                  <% invitation.user.skill_tags.first(3).each do |skill| %>
+                    <span class="px-2 py-1 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded text-xs">
+                      <%= skill %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              
+              <div class="flex space-x-2">
+                <%= link_to 'Chat Now', chat_match_path(invitation), 
+                    class: 'flex-1 px-4 py-2 bg-green-500/20 border border-green-400/30 text-green-300 rounded-lg hover:bg-green-500/30 transition-all duration-200 text-sm text-center' %>
+                <%= link_to 'View Profile', match_path(invitation), 
+                    class: 'flex-1 px-4 py-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all duration-200 text-sm text-center' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Mutual Matches -->
+    <% if @mutual_matches.any? %>
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <span class="text-green-400 mr-3">🎉</span>
+          Mutual Matches (<%= @mutual_matches.count %>)
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @mutual_matches.each do |match| %>
+            <div class="p-6 bg-white/10 backdrop-blur-lg rounded-2xl border border-green-400/30 hover:border-green-400/50 transition-all duration-200">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                    <span class="text-lg font-bold text-white"><%= match.target.display_name.first.upcase %></span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-white"><%= match.target.display_name %></h3>
+                    <p class="text-sm text-gray-300"><%= match.target.university %></p>
+                  </div>
+                </div>
+                <span class="px-3 py-1 bg-green-500/20 border border-green-400/30 text-green-300 rounded-full text-xs font-medium">
+                  Mutual Match!
+                </span>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-gray-300 text-sm mb-2"><strong>Skills:</strong></p>
+                <div class="flex flex-wrap gap-1">
+                  <% match.target.skill_tags.first(3).each do |skill| %>
+                    <span class="px-2 py-1 bg-green-500/20 border border-green-400/30 text-green-300 rounded text-xs">
+                      <%= skill %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              
+              <div class="flex space-x-2">
+                <%= link_to 'Start Chat', chat_match_path(match), 
+                    class: 'flex-1 px-4 py-2 bg-green-500/20 border border-green-400/30 text-green-300 rounded-lg hover:bg-green-500/30 transition-all duration-200 text-sm text-center' %>
+                <%= link_to 'View Profile', match_path(match), 
+                    class: 'flex-1 px-4 py-2 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all duration-200 text-sm text-center' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Recent Activity -->
+    <% if @recent_matches.any? %>
+      <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <span class="text-purple-400 mr-3">📊</span>
+          Recent Activity
+        </h2>
+        
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 p-6">
+          <div class="space-y-4">
+            <% @recent_matches.each do |match| %>
+              <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                    <span class="text-sm font-bold text-white"><%= match.other_user(current_user).display_name.first.upcase %></span>
+                  </div>
+                  <div>
+                    <p class="text-white font-medium">
+                      <%= match.action_type == 'invite' ? 'Invited' : 'Skipped' %> 
+                      <%= match.other_user(current_user).display_name %>
+                    </p>
+                    <p class="text-sm text-gray-400">
+                      <%= time_ago_in_words(match.swiped_at || match.created_at) %> ago
+                    </p>
+                  </div>
+                </div>
+                
+                <span class="px-3 py-1 bg-purple-500/20 border border-purple-400/30 text-purple-300 rounded-full text-xs font-medium">
+                  <%= match.status.titleize %>
+                </span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Empty State -->
+    <% if @pending_invitations.empty? && @my_teams.empty? && @accepted_invitations.empty? && @mutual_matches.empty? %>
+      <div class="text-center py-16">
+        <div class="text-8xl mb-6">🚀</div>
+        <h3 class="text-2xl font-semibold text-white mb-4">Ready to Build Something Amazing?</h3>
+        <p class="text-gray-300 mb-8 max-w-md mx-auto">
+          Start by discovering potential teammates or create your first team to get the ball rolling!
+        </p>
+        <div class="flex justify-center space-x-4">
+          <%= link_to 'Discover Teammates', discover_path, 
+              class: 'px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium text-lg' %>
+          <%= link_to 'Create Team', new_team_path, 
+              class: 'px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium text-lg' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

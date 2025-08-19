@@ -1,0 +1,126 @@
+<div class="container mx-auto p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Chat with <%= @matched_user.name %></h1>
+        <p class="text-gray-600">Start a conversation with your match!</p>
+      </div>
+      
+      <div class="flex space-x-3">
+        <%= link_to 'Back to Matches', matches_path, 
+            class: 'px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600' %>
+        <%= link_to 'View Profile', match_path(@match), 
+            class: 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600' %>
+      </div>
+    </div>
+
+    <!-- Match info card -->
+    <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
+          <span class="text-white text-xl font-bold"><%= @matched_user.name.first.upcase %></span>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800"><%= @matched_user.name %></h3>
+          <p class="text-gray-600"><%= @matched_user.role %></p>
+          <% if @matched_user.skills.present? %>
+            <p class="text-sm text-gray-500">Skills: <%= @matched_user.skills %></p>
+          <% end %>
+        </div>
+        <div class="ml-auto">
+          <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full font-medium">
+            Mutual Match
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat interface placeholder -->
+    <div class="bg-white rounded-lg shadow-lg border">
+      <!-- Chat header -->
+      <div class="px-6 py-4 border-b bg-gray-50 rounded-t-lg">
+        <h3 class="text-lg font-semibold text-gray-800">Messages</h3>
+        <p class="text-sm text-gray-500">Chat functionality coming soon!</p>
+      </div>
+
+      <!-- Chat messages area -->
+      <div class="h-96 p-6 overflow-y-auto bg-gray-50">
+        <div class="text-center py-12">
+          <div class="text-6xl mb-4">💬</div>
+          <h3 class="text-xl font-semibold text-gray-700 mb-2">Chat Coming Soon!</h3>
+          <p class="text-gray-500 mb-4">
+            We're working on bringing you real-time chat functionality.
+          </p>
+          <div class="bg-blue-100 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+            <h4 class="font-semibold text-blue-800 mb-2">What's Next?</h4>
+            <ul class="text-sm text-blue-700 space-y-1">
+              <li>• Real-time messaging with ActionCable</li>
+              <li>• Message history and notifications</li>
+              <li>• File sharing and emoji support</li>
+              <li>• Read receipts and typing indicators</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat input placeholder -->
+      <div class="px-6 py-4 border-t bg-white rounded-b-lg">
+        <div class="flex space-x-3">
+          <input 
+            type="text" 
+            placeholder="Type your message here..." 
+            disabled
+            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+          >
+          <button 
+            disabled
+            class="px-6 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed"
+          >
+            Send
+          </button>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-center">
+          Chat input will be enabled when the feature is ready
+        </p>
+      </div>
+    </div>
+
+    <!-- Match details -->
+    <div class="mt-8 bg-white rounded-lg shadow-lg border p-6">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">About <%= @matched_user.name %></h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-medium text-gray-700 mb-2">Role & Experience</h4>
+          <p class="text-gray-600 mb-4"><%= @matched_user.role %></p>
+          
+          <% if @matched_user.bio.present? %>
+            <h4 class="font-medium text-gray-700 mb-2">Bio</h4>
+            <p class="text-gray-600"><%= simple_format(@matched_user.bio) %></p>
+          <% end %>
+        </div>
+        
+        <div>
+          <% if @matched_user.skills.present? %>
+            <h4 class="font-medium text-gray-700 mb-2">Skills</h4>
+            <div class="flex flex-wrap gap-2">
+              <% @matched_user.skills.split(',').map(&:strip).each do |skill| %>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                  <%= skill %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <div class="mt-4">
+            <h4 class="font-medium text-gray-700 mb-2">Match Details</h4>
+            <p class="text-sm text-gray-600">
+              <strong>Matched on:</strong> <%= @match.swiped_at.strftime("%B %d, %Y at %I:%M %p") %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

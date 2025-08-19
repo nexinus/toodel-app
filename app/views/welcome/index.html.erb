@@ -1,4 +1,73 @@
-<h1>Welcome#index</h1>
-<p>Find me in app/views/welcome/index.html.erb</p>
-<h2>Hello World</h2>
-<p>The time is now: <%= Time.now %></p>
+<section class="relative overflow-hidden">
+  <!-- Hero -->
+  <div class="max-w-6xl mx-auto px-6 md:px-12 py-20 flex flex-col lg:flex-row items-center gap-12">
+    <div class="w-full lg:w-1/2">
+      <h1 class="text-4xl md:text-5xl font-display font-bold leading-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-neon-pink via-neon-purple to-neon-cyan">
+        Find the perfect project team — fast.
+      </h1>
+      <p class="text-gray-300 mb-6 max-w-xl">
+        Toodel helps university students discover teammates with the right skills, availability, and ambition. Swipe, invite, and build — all in one place.
+      </p>
+
+      <div class="flex space-x-4">
+        <%= link_to "Get started — it's free", new_user_registration_path, class: "px-5 py-3 bg-gradient-to-r from-neon-pink to-neon-cyan text-black rounded-md font-semibold" %>
+        <%= link_to "Discover teammates", discover_path, class: "px-5 py-3 border border-white/10 text-white rounded-md" %>
+      </div>
+
+      <div class="mt-8 grid grid-cols-3 gap-3 max-w-sm">
+        <div class="p-3 bg-white/3 rounded-lg">
+          <div class="text-xs text-gray-200">Students</div>
+          <div class="text-lg font-bold">2,400+</div>
+        </div>
+        <div class="p-3 bg-white/3 rounded-lg">
+          <div class="text-xs text-gray-200">Projects</div>
+          <div class="text-lg font-bold">580+</div>
+        </div>
+        <div class="p-3 bg-white/3 rounded-lg">
+          <div class="text-xs text-gray-200">Universities</div>
+          <div class="text-lg font-bold">80+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual / card with sample profile -->
+    <div class="w-full lg:w-1/2 flex justify-center">
+      <div class="w-full max-w-sm p-6 bg-gradient-to-br from-white/3 to-transparent rounded-2xl shadow-2xl backdrop-blur-sm border border-white/5">
+        <div class="flex items-center space-x-4 mb-4">
+          <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-neon-pink to-neon-cyan flex items-center justify-center text-black font-bold">A</div>
+          <div>
+            <div class="text-lg font-semibold text-white">Alex Johnson</div>
+            <div class="text-xs text-gray-400">Computer Science · 3rd year · University of Amsterdam</div>
+          </div>
+        </div>
+
+        <p class="text-gray-300 mb-3">Skills: Ruby, Rails, React, SQL</p>
+        <p class="text-gray-300 text-sm mb-4">Looking for a frontend developer for a web app project. Available evenings and weekends.</p>
+
+        <div class="flex justify-between">
+          <button class="px-4 py-2 rounded-md bg-white/5 text-red-300 hover:bg-white/8">Skip</button>
+          <button class="px-4 py-2 rounded-md bg-gradient-to-r from-neon-pink to-neon-cyan text-black font-semibold">Invite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section id="how" class="max-w-6xl mx-auto px-6 md:px-12 py-16">
+  <h2 class="text-2xl font-semibold text-white mb-6">How it works</h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="p-6 bg-white/3 rounded-lg">
+      <h3 class="font-semibold mb-2">1 — Create your profile</h3>
+      <p class="text-gray-300">Tell us your skills, availability and what you want to build.</p>
+    </div>
+    <div class="p-6 bg-white/3 rounded-lg">
+      <h3 class="font-semibold mb-2">2 — Discover teammates</h3>
+      <p class="text-gray-300">Swipe or browse curated matches based on skills and availability.</p>
+    </div>
+    <div class="p-6 bg-white/3 rounded-lg">
+      <h3 class="font-semibold mb-2">3 — Form a team</h3>
+      <p class="text-gray-300">Invite, chat, and start collaborating — track everything in your dashboard.</p>
+    </div>
+  </div>
+</section>

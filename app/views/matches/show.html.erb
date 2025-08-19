@@ -1,0 +1,173 @@
+<div class="container mx-auto p-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Match Details</h1>
+        <p class="text-gray-600">Your connection with <%= @matched_user.name %></p>
+      </div>
+      
+      <div class="flex space-x-3">
+        <%= link_to 'Back to Matches', matches_path, 
+            class: 'px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600' %>
+        <% if @match.mutual_invitation? %>
+          <%= link_to 'Start Chat', chat_match_path(@match), 
+              class: 'px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600' %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Match status -->
+    <div class="mb-6">
+      <% if @match.mutual_invitation? %>
+        <div class="p-4 bg-green-100 border border-green-200 rounded-lg">
+          <div class="flex items-center">
+            <div class="text-green-600 mr-3">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-green-800">Mutual Invite!</h3>
+              <p class="text-green-700">You and <%= @matched_user.name %> have both invited each other. You can now chat!</p>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="p-4 bg-yellow-100 border border-yellow-200 rounded-lg">
+          <div class="flex items-center">
+            <div class="text-yellow-600 mr-3">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-yellow-800">Waiting for Response</h3>
+              <p class="text-yellow-700">You've invited <%= @matched_user.name %>, but they haven't accepted yet.</p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Match details -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Your profile -->
+      <div class="bg-white rounded-lg shadow-lg border p-6">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">Your Profile</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Name</label>
+            <p class="text-gray-900"><%= current_user.name %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <p class="text-gray-900"><%= current_user.email %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Role</label>
+            <p class="text-gray-900"><%= current_user.role %></p>
+          </div>
+          <% if current_user.skills.present? %>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Skills</label>
+              <p class="text-gray-900"><%= current_user.skills %></p>
+            </div>
+          <% end %>
+          <% if current_user.bio.present? %>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Bio</label>
+              <p class="text-gray-900"><%= simple_format(current_user.bio) %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Matched user profile -->
+      <div class="bg-white rounded-lg shadow-lg border p-6">
+        <h3 class="text-lg font-semibold mb-4 text-gray-800"><%= @matched_user.name %>'s Profile</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Name</label>
+            <p class="text-gray-900"><%= @matched_user.name %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <p class="text-gray-900"><%= @matched_user.email %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Role</label>
+            <p class="text-gray-900"><%= @matched_user.role %></p>
+          </div>
+          <% if @matched_user.skills.present? %>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Skills</label>
+              <p class="text-gray-900"><%= @matched_user.skills %></p>
+            </div>
+          <% end %>
+          <% if @matched_user.bio.present? %>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Bio</label>
+              <p class="text-gray-900"><%= simple_format(@matched_user.bio) %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match timeline -->
+    <div class="mt-8 bg-white rounded-lg shadow-lg border p-6">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Match Timeline</h3>
+      <div class="space-y-4">
+        <div class="flex items-center space-x-4">
+          <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-gray-900 font-medium">You invited <%= @matched_user.name %></p>
+            <p class="text-sm text-gray-500"><%= @match.swiped_at&.strftime("%B %d, %Y at %I:%M %p") || l(@match.created_at, format: :long) %></p>
+          </div>
+        </div>
+        
+        <% if @match.mutual_invitation? %>
+          <div class="flex items-center space-x-4">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">It's a mutual invite! 🎉</p>
+              <p class="text-sm text-gray-500">Both users have invited each other</p>
+            </div>
+          </div>
+        <% else %>
+          <div class="flex items-center space-x-4">
+            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Waiting for <%= @matched_user.name %> to accept</p>
+              <p class="text-sm text-gray-500">They'll see your invitation</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-8 flex justify-center space-x-4">
+      <% if @match.mutual_invitation? %>
+        <%= link_to 'Start Chat', chat_match_path(@match), 
+            class: 'px-8 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 font-medium text-lg' %>
+      <% end %>
+      
+      <%= link_to 'Back to Matches', matches_path, 
+          class: 'px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-medium text-lg' %>
+    </div>
+  </div>
+</div>
