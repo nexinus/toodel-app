@@ -20,6 +20,7 @@ module.exports = {
         fontFamily: {
           sans: ['Inter', 'ui-sans-serif', 'system-ui'],
           display: ['Poppins', 'Inter']
+          heading: ['Poppins', 'Inter', 'ui-sans-serif']
         }
       }
     },
